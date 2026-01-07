@@ -19,3 +19,9 @@ resource "azurerm_network_security_group" "nsg" {
     }
   }
 }
+output "nsg_ids" {
+  description = "NSG IDs"
+  value = {
+    for k, n in azurerm_network_security_group.nsg : k => n.id
+  }
+}

@@ -5,6 +5,4 @@ variable "subnet" {
     virtual_network_name = string
     address_prefixes     = list(string)
   }))
-
-
 }

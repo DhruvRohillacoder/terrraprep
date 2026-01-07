@@ -6,3 +6,8 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = each.value.allocation_method
   sku                 = each.value.sku
 }
+output "pip_ids" {
+  value = {
+    for k, p in azurerm_public_ip.pip : k => p.id
+  }
+}

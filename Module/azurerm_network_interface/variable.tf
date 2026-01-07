@@ -1,14 +1,18 @@
 variable "nic" {
   type = map(object({
-    name                = "ddnic"
-    location            = "Canada Central"
-    resource_group_name = "ddrg"
-
-    ip_configuration_name = "internal"
-    subnet_id             = data.azurerm_subnet.ddsubnet.id
-
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = data.azurerm_public_ip.ddpip.id
+    name                = string
+    location            = string
+    resource_group_name = string
 
   }))
 }
+
+variable "ip_configuration" {
+  type = map(object({
+    name                          = string
+    private_ip_address_allocation = string
+    subnet_id                     = string
+    public_ip_address_id          = optional(string)
+  }))
+}
+

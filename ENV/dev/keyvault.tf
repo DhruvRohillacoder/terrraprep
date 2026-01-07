@@ -9,17 +9,13 @@ data "azurerm_key_vault_secret" "kv_username" {
 }
 
 data "azurerm_key_vault_secret" "kv_password" {
-  name         = "password1"
+  name         = "password"
   key_vault_id = data.azurerm_key_vault.kv.id
 }
-
-data "azurerm_network_interface" "ddnic" {
-  name                = "cdnic"
-  resource_group_name = "cdrg"
-}
-
-data "azurerm_subnet" "ddsubnet" {
-  name                 = "cdsubnet"
-  virtual_network_name = "cdvnet"
-  resource_group_name  = "cdrg"
+#####################################
+# NIC ↔ NSG ASSOCIATION (ROOT LEVEL)
+#####################################
+resource "azurerm_network_interface_security_group_association" "nic_nsg" {
+  network_interface_id      = module.nic.nic_ids["nic1"]
+  network_security_group_id = module.nsg.nsg_ids["ni"]
 }
