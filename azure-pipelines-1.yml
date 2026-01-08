@@ -1,0 +1,234 @@
+trigger: none
+  # branches:
+  #   include:
+  #   - master
+  #   - feature/*
+pool:
+  name: Devagent
+variables:
+- name: WORK_DIR
+  value: '$(System.DefaultWorkingDirectory)/Env/Dev'
+stages:
+- stage: initValidatePlan
+  displayName: Terraform Init, Validate and Plan
+  jobs:
+  - job: initValidatePlan
+    displayName: Init, Validate and Plan
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+    # - task: TerraformTask@5
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'init'
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+    #     backendServiceArm: 'dhruv_sc'
+    #     backendAzureRmOverrideSubscriptionID: 'c060d854-01c4-4739-baf7-57540765c3d2'
+    #     backendAzureRmResourceGroupName: 'dhruv-bd'
+    #     backendAzureRmStorageAccountName: 'dhruvbdstg4'
+    #     backendAzureRmContainerName: 'terrafornbd'
+    #     backendAzureRmKey: 'Dev.tfstate'
+    
+    # - task: TerraformTask@5
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'validate'
+    #     workingDirectory: '$(WORK_DIR)'
+
+
+    # - task: TerraformTask@5
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'plan'
+    #     workingDirectory: '$(WORK_DIR)'
+    #     environmentServiceNameAzureRM: 'dhruv_sc'
+    #     environmentAzureRmOverrideSubscriptionID: 'c060d854-01c4-4739-baf7-57540765c3d2'
+    
+# - stage: infracostestimate
+#   jobs:
+#     - job: infracosttool
+#       steps:
+#       - task: CmdLine@2
+#         displayName: infracosting check
+#         inputs:
+#          script: 'infracost breakdown --path . --format=html > cost-out.html'
+#          workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# trigger:
+#   branches:
+#     include:
+#     - master
+#     - feature/*
+# pool:
+#   name: agent-ka-gang
+# variables:
+# - name: WORK_DIR
+#   value: '$(System.DefaultWorkingDirectory)/env/dev'
+# stages:
+# - stage: initValidatePlan
+#   displayName: Terraform Init, Validate and Plan
+#   jobs:
+#   - job: initValidatePlan
+#     displayName: Init, Validate and Plan
+#     steps:
+#     - task: TerraformTask@5
+#       displayName: terraformInit
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'init'
+#         workingDirectory: '$(WORK_DIR)'
+#         backendServiceArm: 'wif-connect2'
+#         backendAzureRmStorageAccountName: '1week007'
+#         backendAzureRmContainerName: '1week'
+#         backendAzureRmKey: 'dev.tfstate'
+#     - task: TerraformTask@5
+#       displayName: terraformValidate
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'validate'
+#         workingDirectory: '$(WORK_DIR)'
+#     - task: TerraformTask@5
+#       displayName: terraformPlan
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'plan'
+#         workingDirectory: '$(WORK_DIR)'
+#         environmentServiceNameAzureRM: 'wif-connect2'
+# - stage: securityScanning
+#   displayName: Security Scanning
+#   jobs:
+#   - job: tflint
+#     displayName: tflint
+#     steps:
+#     - task: CmdLine@2
+#       displayName: tflint
+#       continueOnError: true
+#       inputs:
+#         script: 'tflint --recursive /f junit > tflint-report.xml'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)'
+#     - task: PublishTestResults@2
+#       displayName: tflint-report publish
+#       inputs:
+#         testResultsFormat: 'JUnit'
+#         testResultsFiles: 'tflint-report.xml'
+#         testRunTitle: 'tflint-scan'
+#   - job: checkov
+#     dependsOn:
+#     - tflint
+#     displayName: checkov
+#     steps:
+#     - task: CmdLine@2
+#       displayName: checkov
+#       continueOnError: true
+#       inputs:
+#         script: 'checkov -d . -o junitxml > checkov-out.xml'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)'
+#     - task: PublishTestResults@2
+#       displayName: checkov-publish
+#       inputs:
+#         testResultsFormat: 'JUnit'
+#         testResultsFiles: 'checkov-out.xml'
+#         testRunTitle: 'checkov'
+# - stage: costEstimation
+#   displayName: Cost Estimation
+#   jobs:
+#   - job: infracost
+#     displayName: infracost
+#     steps:
+#     - task: CmdLine@2
+#       displayName: infracost
+#       inputs:
+#         script: 'infracost breakdown --path . --format=html > cost-out.html'
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/modules'
+#     - task: PublishBuildArtifacts@1
+#       displayName: publish cost
+#       inputs:
+#         PathtoPublish: '$(System.DefaultWorkingDirectory)/modules/cost-out.html'
+#         ArtifactName: 'costing'
+#         publishLocation: 'Container'
+# - stage: apply
+#   displayName: Terraform Apply Stage
+#   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+#   jobs:
+#   - job: manualValidation
+#     displayName: Manual Validation
+#     pool:
+#       name: server
+#     steps:
+#     - task: ManualValidation@1
+#       inputs:
+#         notifyUsers: 'achinta.dutta04@gmail.com'
+#         approvers: 'achinta.dutta04@gmail.com'
+#         instructions: 'Please approve for infra'
+#   - job: apply
+#     displayName: Terraform Apply Job
+#     dependsOn:
+#     - manualValidation
+#     steps:
+#     - task: TerraformTask@5
+#       displayName: terraformInit
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'init'
+#         workingDirectory: '$(WORK_DIR)'
+#         backendServiceArm: 'wif-connect2'
+#         backendAzureRmStorageAccountName: '1week007'
+#         backendAzureRmContainerName: '1week'
+#         backendAzureRmKey: 'dev.tfstate'
+#     - task: TerraformTask@5
+#       displayName: Terraform Apply
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'apply'
+#         workingDirectory: '$(WORK_DIR)'
+#         environmentServiceNameAzureRM: 'wif-connect2'
