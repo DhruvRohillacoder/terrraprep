@@ -32,7 +32,7 @@ stages:
         script: |
           tflint --init
           tflint
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'''
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
     
 
     # - task: TerraformTask@5
